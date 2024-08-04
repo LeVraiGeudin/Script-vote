@@ -38,10 +38,19 @@ jobs:
           CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1-3)
           echo "CHROME_VERSION=$CHROME_VERSION" >> $GITHUB_ENV
 
+      - name: Get ChromeDriver version
+        id: get_chromedriver_version
+        run: |
+          CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} || echo "Not Found")
+          if [ "$CHROMEDRIVER_VERSION" == "Not Found" ]; then
+            echo "Error: ChromeDriver version not found for Chrome version $CHROME_VERSION" >&2
+            exit 1
+          fi
+          echo "CHROMEDRIVER_VERSION=$CHROMEDRIVER_VERSION" >> $GITHUB_ENV
+
       - name: Install ChromeDriver
         run: |
-          CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION})
-          wget https://chromedriver.storage.googleapis.com/${CHROMEDRIVER_VERSION}/chromedriver_linux64.zip
+          wget https://chromedriver.storage.googleapis.com/${{ env.CHROMEDRIVER_VERSION }}/chromedriver_linux64.zip
           unzip chromedriver_linux64.zip
           sudo mv chromedriver /usr/local/bin/
           sudo chmod +x /usr/local/bin/chromedriver
