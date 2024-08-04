@@ -8,12 +8,13 @@ from selenium.webdriver.common.action_chains import ActionChains
 import time
 
 # Chemin vers le WebDriver
-CHROMEDRIVER_PATH = 'C:\\Users\\cante\\Desktop\\chromedriver-win64\\chromedriver.exe'  # Assure-toi que ce chemin est correct
+CHROMEDRIVER_PATH = '/usr/local/bin/chromedriver'  # Chemin pour GitHub Actions
 
 # Configurer les options pour le navigateur
 chrome_options = Options()
-# Décommenter cette ligne pour exécuter le navigateur en mode visible
-# chrome_options.add_argument("--headless")
+chrome_options.add_argument("--headless")
+chrome_options.add_argument("--no-sandbox")
+chrome_options.add_argument("--disable-dev-shm-usage")
 
 driver = None
 try:
