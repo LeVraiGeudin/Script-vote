@@ -42,12 +42,15 @@ jobs:
         run: |
           # Specify a known good version of ChromeDriver
           CHROMEDRIVER_VERSION="127.0.6533.88"  # Example version, change to an available version
+
+          # Download the ChromeDriver zip file
           wget https://storage.googleapis.com/chrome-for-testing-public/127.0.6533.88/linux64/chromedriver-linux64.zip
+
           # Unzip the downloaded file
           unzip chromedriver-linux64.zip
 
           # Move chromedriver to /usr/local/bin/
-          sudo mv chromedriver /usr/local/bin/
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/
 
           # Set executable permissions
           sudo chmod +x /usr/local/bin/chromedriver
