@@ -2,7 +2,6 @@ name: Automate Vote Script
 
 on:
   schedule:
-    # Exécuter toutes les deux heures
     - cron: '0 */2 * * *'
   push:
     branches:
@@ -14,10 +13,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: '3.x'
 
@@ -28,10 +27,13 @@ jobs:
 
     - name: Download ChromeDriver
       run: |
+        sudo apt-get update
         sudo apt-get install -y unzip xvfb libxi6 libgconf-2-4
         CHROME_DRIVER_VERSION=$(wget -qO- https://chromedriver.storage.googleapis.com/LATEST_RELEASE)
         wget -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/${CHROME_DRIVER_VERSION}/chromedriver_linux64.zip
         sudo unzip /tmp/chromedriver.zip -d /usr/local/bin/
+        sudo chmod +x /usr/local/bin/chromedriver
+        sudo ln -s /usr/local/bin/chromedriver /usr/bin/chromedriver
 
     - name: Download Google Chrome
       run: |
@@ -42,4 +44,6 @@ jobs:
 
     - name: Run vote script
       run: |
+        google-chrome --version
+        chromedriver --version
         xvfb-run -a python vote.py
