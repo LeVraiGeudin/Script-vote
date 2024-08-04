@@ -42,8 +42,8 @@ jobs:
         id: get_chromedriver_version
         run: |
           CHROME_VERSION=${{ env.CHROME_VERSION }}
-          CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION} || echo "Not Found")
-          if [ "$CHROMEDRIVER_VERSION" == "Not Found" ]; then
+          CHROMEDRIVER_VERSION=$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_VERSION})
+          if [[ -z "$CHROMEDRIVER_VERSION" || "$CHROMEDRIVER_VERSION" == *"Error"* ]]; then
             echo "Error: ChromeDriver version not found for Chrome version $CHROME_VERSION" >&2
             exit 1
           fi
@@ -52,7 +52,7 @@ jobs:
       - name: Install ChromeDriver
         run: |
           CHROMEDRIVER_VERSION=${{ env.CHROMEDRIVER_VERSION }}
-          if [ "$CHROMEDRIVER_VERSION" == "Not Found" ]; then
+          if [[ -z "$CHROMEDRIVER_VERSION" ]]; then
             echo "Error: Unable to download ChromeDriver" >&2
             exit 1
           fi
